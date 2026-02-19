@@ -1,4 +1,6 @@
 ﻿using CafeRush.Domain;
+using System;
+
 namespace CafeRush.Services
 {
     public partial class OrderService
@@ -91,7 +93,7 @@ namespace CafeRush.Services
 
                 while (true)
                 {
-                    Console.WriteLine($"Назва інгредієнта #{i + 1}:");
+                    Console.WriteLine("Назва інгредієнта #" + (i + 1) + ":");
                     ingName = Console.ReadLine();
                     if (!string.IsNullOrWhiteSpace(ingName))
                     {
@@ -103,7 +105,7 @@ namespace CafeRush.Services
 
                 while (true)
                 {
-                    Console.WriteLine($"Скільки потрібно для 1 напою?");
+                    Console.WriteLine("Скільки потрібно для 1 напою?");
                     string neededInput = Console.ReadLine();
                     if (int.TryParse(neededInput, out needed) && needed > 0)
                     {

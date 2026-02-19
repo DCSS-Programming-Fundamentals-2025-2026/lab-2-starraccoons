@@ -61,11 +61,33 @@ namespace CafeRush.Services
             MenuCount++;
         }
 
+        private IngredientType MapIngredientName(string name)
+        {
+            string lower = name.ToLowerInvariant();
+            if (lower == "кава" || lower == "зерно" || lower == "coffee" || lower == "coffeebeans" || lower == "beans")
+            {
+                return IngredientType.CoffeeBeans;
+            }
+            if (lower == "молоко" || lower == "milk")
+            {
+                return IngredientType.Milk;
+            }
+            if (lower == "склянки" || lower == "чашки" || lower == "cups")
+            {
+                return IngredientType.Cups;
+            }
+            if (lower == "цукор" || lower == "sugar")
+            {
+                return IngredientType.Sugar;
+            }
+            return IngredientType.Extra;
+        }
+
         public void AddDrinkByDetails(string name, decimal price, string[] ingredientNames, int[] ingredientAmounts)
         {
             if (ingredientNames == null || ingredientAmounts == null || ingredientNames.Length != ingredientAmounts.Length)
             {
-                throw new ArgumentException("ingredient arrays invalid");
+                throw new InvalidIngredientException("ingredient arrays invalid");
             }
 
             Drink d = new Drink(name, price, 0, 0, 0, 0);
@@ -75,23 +97,23 @@ namespace CafeRush.Services
                 int amt = ingredientAmounts[i];
                 if (string.IsNullOrWhiteSpace(ing) || amt <= 0)
                 {
-                    throw new ArgumentException("Invalid ingredient entry");
+                    throw new InvalidIngredientException("Invalid ingredient entry");
                 }
 
-                string lower = ing.ToLowerInvariant();
-                if (lower == "кава" || lower == "зерно" || lower == "coffee" || lower == "coffeebeans" || lower == "beans")
+                IngredientType type = MapIngredientName(ing);
+                if (type == IngredientType.CoffeeBeans)
                 {
                     d.BeansNeeded = d.BeansNeeded + amt;
                 }
-                else if (lower == "молоко" || lower == "milk")
+                else if (type == IngredientType.Milk)
                 {
                     d.MilkNeeded = d.MilkNeeded + amt;
                 }
-                else if (lower == "склянки" || lower == "чашки" || lower == "cups")
+                else if (type == IngredientType.Cups)
                 {
                     d.CupsNeeded = d.CupsNeeded + amt;
                 }
-                else if (lower == "цукор" || lower == "sugar")
+                else if (type == IngredientType.Sugar)
                 {
                     d.SugarNeeded = d.SugarNeeded + amt;
                 }

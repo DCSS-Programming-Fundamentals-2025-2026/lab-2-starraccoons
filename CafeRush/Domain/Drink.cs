@@ -1,4 +1,5 @@
-﻿using CafeRush.Contracts;
+﻿using System;
+using CafeRush.Contracts;
 
 namespace CafeRush.Domain
 {

@@ -81,9 +81,9 @@ namespace CafeRush
                                 int[] ingAmounts = new int[count];
                                 for (int i = 0; i < count; i++)
                                 {
-                                    Console.WriteLine($"Назва інгредієнта #{i + 1}:");
+                                    Console.WriteLine("Назва інгредієнта #" + (i + 1) + ":");
                                     ingNames[i] = Console.ReadLine();
-                                    Console.WriteLine($"Кількість для 1 напою:");
+                                    Console.WriteLine("Кількість для 1 напою:");
                                     string ai = Console.ReadLine();
                                     int aiVal;
                                     if (!int.TryParse(ai, out aiVal) || aiVal <= 0)
@@ -100,7 +100,7 @@ namespace CafeRush
                                     cafe.MenuService.AddDrinkByDetails(name, price, ingNames, ingAmounts);
                                     Console.WriteLine("Напій додано у меню.");
                                 }
-                                catch (System.Exception ex)
+                                catch (Exception ex)
                                 {
                                     Console.WriteLine("Помилка при додаванні напою: " + ex.Message);
                                 }

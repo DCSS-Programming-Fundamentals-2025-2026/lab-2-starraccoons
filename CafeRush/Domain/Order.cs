@@ -7,7 +7,6 @@ namespace CafeRush.Domain
         public Drink[] Drinks { get; set; }
         public int DrinksCount { get; set; }
         public decimal Total { get; set; }
-
         public string Id { get; set; }
 
         public Order()
@@ -43,16 +42,18 @@ namespace CafeRush.Domain
             Total = Total + d.Price;
         }
 
-        public bool CanPrepare(Stock stock)
+        private void CollectExtras(
+            out int needBeans, out int needMilk, out int needCups, out int needSugar,
+            out string[] tempExtraNames, out int[] tempExtraAmounts, out int tempExtraCount)
         {
-            int needBeans = 0;
-            int needMilk = 0;
-            int needCups = 0;
-            int needSugar = 0;
+            needBeans = 0;
+            needMilk = 0;
+            needCups = 0;
+            needSugar = 0;
 
-            string[] tempExtraNames = new string[50];
-            int[] tempExtraAmounts = new int[50];
-            int tempExtraCount = 0;
+            tempExtraNames = new string[50];
+            tempExtraAmounts = new int[50];
+            tempExtraCount = 0;
 
             for (int i = 0; i < DrinksCount; i++)
             {
@@ -99,6 +100,21 @@ namespace CafeRush.Domain
                     }
                 }
             }
+        }
+
+        public bool CanPrepare(Stock stock)
+        {
+            int needBeans;
+            int needMilk;
+            int needCups;
+            int needSugar;
+            string[] tempExtraNames;
+            int[] tempExtraAmounts;
+            int tempExtraCount;
+
+            CollectExtras(
+                out needBeans, out needMilk, out needCups, out needSugar,
+                out tempExtraNames, out tempExtraAmounts, out tempExtraCount);
 
             if (stock.CoffeeBeans < needBeans)
             {
@@ -130,60 +146,17 @@ namespace CafeRush.Domain
 
         public void Prepare(Stock stock)
         {
-            int needBeans = 0;
-            int needMilk = 0;
-            int needCups = 0;
-            int needSugar = 0;
+            int needBeans;
+            int needMilk;
+            int needCups;
+            int needSugar;
+            string[] tempExtraNames;
+            int[] tempExtraAmounts;
+            int tempExtraCount;
 
-            string[] tempExtraNames = new string[50];
-            int[] tempExtraAmounts = new int[50];
-            int tempExtraCount = 0;
-
-            for (int i = 0; i < DrinksCount; i++)
-            {
-                needBeans = needBeans + Drinks[i].BeansNeeded;
-                needMilk = needMilk + Drinks[i].MilkNeeded;
-                needCups = needCups + Drinks[i].CupsNeeded;
-                needSugar = needSugar + Drinks[i].SugarNeeded;
-
-                for (int e = 0; e < Drinks[i].ExtraIngredientCount; e++)
-                {
-                    string ename = Drinks[i].ExtraIngredientNames[e];
-                    int eamount = Drinks[i].ExtraIngredientAmounts[e];
-
-                    bool found = false;
-                    for (int t = 0; t < tempExtraCount; t++)
-                    {
-                        if (tempExtraNames[t] == ename)
-                        {
-                            tempExtraAmounts[t] = tempExtraAmounts[t] + eamount;
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found)
-                    {
-                        if (tempExtraCount >= tempExtraNames.Length)
-                        {
-                            int newSize = tempExtraNames.Length * 2;
-                            string[] nn = new string[newSize];
-                            int[] na = new int[newSize];
-                            for (int k = 0; k < tempExtraNames.Length; k++)
-                            {
-                                nn[k] = tempExtraNames[k];
-                                na[k] = tempExtraAmounts[k];
-                            }
-                            tempExtraNames = nn;
-                            tempExtraAmounts = na;
-                        }
-
-                        tempExtraNames[tempExtraCount] = ename;
-                        tempExtraAmounts[tempExtraCount] = eamount;
-                        tempExtraCount++;
-                    }
-                }
-            }
+            CollectExtras(
+                out needBeans, out needMilk, out needCups, out needSugar,
+                out tempExtraNames, out tempExtraAmounts, out tempExtraCount);
 
             stock.CoffeeBeans = stock.CoffeeBeans - needBeans;
             stock.Milk = stock.Milk - needMilk;

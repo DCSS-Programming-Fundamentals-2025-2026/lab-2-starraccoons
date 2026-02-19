@@ -25,30 +25,26 @@ namespace CafeRush.Domain
             ExtraCount = 0;
         }
 
-        private string MapName(string name)
+        private IngredientType MapNameToType(string name)
         {
             name = name.ToLowerInvariant();
-            switch (name)
+            if (name == "кава" || name == "зерно" || name == "зерна" || name == "coffeebeans" || name == "coffee")
             {
-                case "кава":
-                case "зерно":
-                case "зерна":
-                case "coffeebeans":
-                case "coffee":
-                    return "CoffeeBeans";
-                case "молоко":
-                case "milk":
-                    return "Milk";
-                case "склянки":
-                case "чашки":
-                case "cups":
-                    return "Cups";
-                case "цукор":
-                case "sugar":
-                    return "Sugar";
-                default:
-                    return name;
+                return IngredientType.CoffeeBeans;
             }
+            if (name == "молоко" || name == "milk")
+            {
+                return IngredientType.Milk;
+            }
+            if (name == "склянки" || name == "чашки" || name == "cups")
+            {
+                return IngredientType.Cups;
+            }
+            if (name == "цукор" || name == "sugar")
+            {
+                return IngredientType.Sugar;
+            }
+            return IngredientType.Extra;
         }
 
         private void EnsureExtraCapacity()
@@ -92,58 +88,65 @@ namespace CafeRush.Domain
 
         public bool HasExtra(string name, int needed)
         {
-            name = MapName(name);
-            switch (name)
+            IngredientType type = MapNameToType(name);
+            if (type == IngredientType.CoffeeBeans)
             {
-                case "CoffeeBeans":
-                    return CoffeeBeans >= needed;
-                case "Milk":
-                    return Milk >= needed;
-                case "Cups":
-                    return Cups >= needed;
-                case "Sugar":
-                    return Sugar >= needed;
-                default:
-                    for (int i = 0; i < ExtraCount; i++)
-                    {
-                        if (ExtraNames[i] == name && ExtraAmounts[i] >= needed)
-                        {
-                            return true;
-                        }
-                    }
-
-                    return false;
+                return CoffeeBeans >= needed;
             }
+            if (type == IngredientType.Milk)
+            {
+                return Milk >= needed;
+            }
+            if (type == IngredientType.Cups)
+            {
+                return Cups >= needed;
+            }
+            if (type == IngredientType.Sugar)
+            {
+                return Sugar >= needed;
+            }
+
+            for (int i = 0; i < ExtraCount; i++)
+            {
+                if (ExtraNames[i] == name && ExtraAmounts[i] >= needed)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void Consume(string name, int amount)
         {
-            name = MapName(name);
-            switch (name)
+            IngredientType type = MapNameToType(name);
+            if (type == IngredientType.CoffeeBeans)
             {
-                case "CoffeeBeans":
-                    CoffeeBeans = CoffeeBeans - amount;
-                    break;
-                case "Milk":
-                    Milk = Milk - amount;
-                    break;
-                case "Cups":
-                    Cups = Cups - amount;
-                    break;
-                case "Sugar":
-                    Sugar = Sugar - amount;
-                    break;
-                default:
-                    for (int i = 0; i < ExtraCount; i++)
-                    {
-                        if (ExtraNames[i] == name)
-                        {
-                            ExtraAmounts[i] = ExtraAmounts[i] - amount;
-                            return;
-                        }
-                    }
+                CoffeeBeans = CoffeeBeans - amount;
+                return;
+            }
+            if (type == IngredientType.Milk)
+            {
+                Milk = Milk - amount;
+                return;
+            }
+            if (type == IngredientType.Cups)
+            {
+                Cups = Cups - amount;
+                return;
+            }
+            if (type == IngredientType.Sugar)
+            {
+                Sugar = Sugar - amount;
+                return;
+            }
 
-                    break;
+            for (int i = 0; i < ExtraCount; i++)
+            {
+                if (ExtraNames[i] == name)
+                {
+                    ExtraAmounts[i] = ExtraAmounts[i] - amount;
+                    return;
+                }
             }
         }
 
@@ -168,21 +171,20 @@ namespace CafeRush.Domain
                     continue;
                 }
 
-                name = MapName(name);
-
-                if (name == "CoffeeBeans")
+                IngredientType type = MapNameToType(name);
+                if (type == IngredientType.CoffeeBeans)
                 {
                     CoffeeBeans = CoffeeBeans + amount;
                 }
-                else if (name == "Milk")
+                else if (type == IngredientType.Milk)
                 {
                     Milk = Milk + amount;
                 }
-                else if (name == "Cups")
+                else if (type == IngredientType.Cups)
                 {
                     Cups = Cups + amount;
                 }
-                else if (name == "Sugar")
+                else if (type == IngredientType.Sugar)
                 {
                     Sugar = Sugar + amount;
                 }

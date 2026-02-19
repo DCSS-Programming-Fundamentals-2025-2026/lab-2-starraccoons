@@ -30,7 +30,7 @@ namespace CafeRush.Services
                 }
 
                 double avg = (double)sum / orderService.RatingCount;
-                Console.WriteLine($"Середній рівень обслуговування: {avg:F2}");
+                Console.WriteLine("Середній рівень обслуговування: " + avg.ToString("F2"));
 
                 Console.WriteLine("Кількість оцінок:");
                 for (int i = 1; i <= 5; i++)
