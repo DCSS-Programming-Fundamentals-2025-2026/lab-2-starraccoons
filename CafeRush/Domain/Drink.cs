@@ -3,7 +3,7 @@ using CafeRush.Contracts;
 
 namespace CafeRush.Domain
 {
-    public class Drink : MenuItemBase, IRecipe
+    public class Drink : MenuItemBase, IRecipe, IComparable
     {
         public int BeansNeeded { get; set; }
         public int MilkNeeded { get; set; }
@@ -98,6 +98,25 @@ namespace CafeRush.Domain
                 string name = ExtraIngredientNames[i];
                 int amount = ExtraIngredientAmounts[i];
                 stock.Consume(name, amount);
+            }
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+            {
+                return 1;
+            }
+            ;
+
+            Drink otherDrink = obj as Drink;
+            if (otherDrink != null)
+            {
+                return this.Price.CompareTo(otherDrink.Price);
+            }
+            else
+            {
+                throw new ArgumentException("Об'єкт не є типом Drink");
             }
         }
     }
