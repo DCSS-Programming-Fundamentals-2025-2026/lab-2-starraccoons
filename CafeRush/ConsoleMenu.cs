@@ -1,6 +1,7 @@
 ﻿using CafeRush.Domain;
 using CafeRush.Services;
 using System;
+using System.Collections;
 
 namespace CafeRush
 {
@@ -129,6 +130,10 @@ namespace CafeRush
                         }
                     }
                 }
+                else if (input == "10")
+                {
+                    ShowSortedMenuDemo();
+                }
                 else if (input == "0")
                 {
                     run = false;
@@ -153,8 +158,50 @@ namespace CafeRush
             Console.WriteLine("7 - Перезапуск дня");
             Console.WriteLine("8 - Додати напій у меню (інтерактивно)");
             Console.WriteLine("9 - Видалити напій з меню");
+            Console.WriteLine("10 - Показати відсортоване меню (демо колекції)");
             Console.WriteLine("0 - Вихід");
             Console.Write("Ваш вибір: ");
+        }
+
+        private void ShowSortedMenuDemo()
+        {
+            if (cafe.MenuService.MenuCount == 0)
+            {
+                Console.WriteLine("Меню порожнє.");
+                return;
+            }
+
+            DrinkCollection drinkCollection = new DrinkCollection();
+            for (int i = 0; i < cafe.MenuService.MenuCount; i++)
+            {
+                drinkCollection.Add(cafe.MenuService.Menu[i]);
+            }
+
+            Console.WriteLine("\n--- Оригінальне меню (використання IEnumerator) ---");
+            IEnumerator it = drinkCollection.GetEnumerator();
+            while (it.MoveNext())
+            {
+                Drink d = (Drink)it.Current;
+                Console.WriteLine($"{d.Name} - {d.Price} грн");
+            }
+
+            Console.WriteLine("\n--- Сортування за замовчуванням (за ціною, IComparable) ---");
+            drinkCollection.Sort();
+            it.Reset();
+            while (it.MoveNext())
+            {
+                Drink d = (Drink)it.Current;
+                Console.WriteLine($"{d.Name} - {d.Price} грн");
+            }
+
+            Console.WriteLine("\n--- Альтернативне сортування (за алфавітом, IComparer) ---");
+            drinkCollection.Sort(new Comparers.DrinkNameComparer());
+            it.Reset();
+            while (it.MoveNext())
+            {
+                Drink d = (Drink)it.Current;
+                Console.WriteLine($"{d.Name} - {d.Price} грн");
+            }
         }
     }
 }
