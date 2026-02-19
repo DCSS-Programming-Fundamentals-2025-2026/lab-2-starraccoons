@@ -17,145 +17,134 @@ namespace CafeRush.Tests
             _menuService = new MenuService();
         }
 
-        // ==========================================
-        // UNIT TESTS: MenuService - Видалення
-        // ==========================================
-
         [Test]
         public void RemoveDrinkByName_ExistingDrink_ShouldReturnTrue()
         {
-            // Arrange
+            //Arrange
             string drinkToRemove = "Espresso";
 
-            // Act
+            //Act
             bool result = _menuService.RemoveDrinkByName(drinkToRemove);
 
-            // Assert
+            //Assert
             Assert.That(result, Is.True);
         }
 
         [Test]
         public void RemoveDrinkByName_ExistingDrink_ShouldDecrementCount()
         {
-            // Arrange
+            //Arrange
             int initialCount = _menuService.MenuCount;
 
-            // Act
+            //Act
             _menuService.RemoveDrinkByName("Espresso");
 
-            // Assert
+            //Assert
             Assert.That(_menuService.MenuCount, Is.EqualTo(initialCount - 1));
         }
 
         [Test]
         public void RemoveDrinkByName_ExistingDrink_ShouldShiftArrayLeft()
         {
-            // Arrange
-            // За замовчуванням: індекс 0 = Espresso, індекс 1 = Latte
-
-            // Act
+            //Arrange
+            
+            //Act
             _menuService.RemoveDrinkByName("Espresso");
 
-            // Assert
-            // Після видалення Espresso, Latte має зайняти індекс 0
+            //Assert
             Assert.That(_menuService.Menu[0].Name, Is.EqualTo("Latte"));
         }
 
         [Test]
         public void RemoveDrinkByName_ExistingDrink_LastSlotShouldBeNull()
         {
-            // Arrange
+            //Arrange
             int countBefore = _menuService.MenuCount;
 
-            // Act
+            //Act
             _menuService.RemoveDrinkByName("Espresso");
 
-            // Assert
-            // Останній слот після зсуву має бути null
+            //Assert
             Assert.That(_menuService.Menu[countBefore - 1], Is.Null);
         }
 
         [Test]
         public void RemoveDrinkByName_NonExistentDrink_ShouldReturnFalse()
         {
-            // Arrange
+            //Arrange
             string fakeDrink = "NonExistent";
 
-            // Act
+            //Act
             bool result = _menuService.RemoveDrinkByName(fakeDrink);
 
-            // Assert
+            //Assert
             Assert.That(result, Is.False);
         }
 
         [Test]
         public void RemoveDrinkByName_NonExistentDrink_ShouldNotChangeCount()
         {
-            // Arrange
+            //Arrange
             int initialCount = _menuService.MenuCount;
 
-            // Act
+            //Act
             _menuService.RemoveDrinkByName("NonExistent");
 
-            // Assert
+            //Assert
             Assert.That(_menuService.MenuCount, Is.EqualTo(initialCount));
         }
 
         [Test]
         public void RemoveDrinkByName_EmptyName_ShouldReturnFalse()
         {
-            // Arrange
+            //Arrange
             string emptyName = "";
 
-            // Act
+            //Act
             bool result = _menuService.RemoveDrinkByName(emptyName);
 
-            // Assert
+            //Assert
             Assert.That(result, Is.False);
         }
-
-        // ==========================================
-        // UNIT TESTS: MenuService - Додавання
-        // ==========================================
 
         [Test]
         public void AddDrinkByDetails_ValidData_ShouldIncreaseMenuCount()
         {
-            // Arrange
+            //Arrange
             int countBefore = _menuService.MenuCount;
             string[] ingredients = { "кава", "цукор" };
             int[] amounts = { 10, 5 };
 
-            // Act
+            //Act
             _menuService.AddDrinkByDetails("CustomCoffee", 50m, ingredients, amounts);
 
-            // Assert
+            //Assert
             Assert.That(_menuService.MenuCount, Is.EqualTo(countBefore + 1));
         }
 
         [Test]
         public void AddDrinkByDetails_ValidData_ShouldStoreDrinkAtCorrectIndex()
         {
-            // Arrange
+            //Arrange
             int countBefore = _menuService.MenuCount;
             string[] ingredients = { "кава", "цукор" };
             int[] amounts = { 10, 5 };
 
-            // Act
+            //Act
             _menuService.AddDrinkByDetails("CustomCoffee", 50m, ingredients, amounts);
 
-            // Assert
+            //Assert
             Assert.That(_menuService.Menu[countBefore].Name, Is.EqualTo("CustomCoffee"));
         }
 
         [Test]
         public void AddDrinkByDetails_InvalidArrayLengths_ShouldThrowInvalidIngredientException()
         {
-            // Arrange
+            //Arrange
             string[] names = { "Cup" };
-            int[] amounts = { 1, 2 }; // довжина не збігається
+            int[] amounts = { 1, 2 };
 
-            // Act & Assert
+            //Act & Assert
             Assert.Throws<InvalidIngredientException>(() =>
             {
                 _menuService.AddDrinkByDetails("Water", 10m, names, amounts);
