@@ -9,7 +9,7 @@
 
 ## Структура проєкту
 
-
+```text
 CafeRush/
 ├── Contracts/
 │   └── IRecipe.cs
@@ -31,11 +31,15 @@ CafeRush/
 └── Program.cs
 
 CafeRush.Tests/
-├── MenuServiceTests.cs
-├── StockAndOrderTests.cs
-└── IntegrationAndReportTests.cs
-
-
+├── Domain/
+│   ├── DrinkTests.cs
+│   ├── OrderTests.cs
+│   └── StockTests.cs
+└── Services/
+    ├── IntegrationTests.cs
+    ├── MenuServiceTests.cs
+    └── OrderServiceTests.cs
+```
 ## Як запустити проєкт
 
 1. Відкрити рішення у Visual Studio
