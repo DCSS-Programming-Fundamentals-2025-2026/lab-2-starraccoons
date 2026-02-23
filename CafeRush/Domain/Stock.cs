@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace CafeRush.Domain
 {
     public class Stock

@@ -1,6 +1,7 @@
 ﻿using CafeRush.Domain;
 using CafeRush.Services;
 
+
 namespace CafeRush.Tests.Services
 {
     [TestFixture]
